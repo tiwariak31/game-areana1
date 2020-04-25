@@ -1,0 +1,55 @@
+<div class="select-wrapper">
+  <mat-form-field>
+    <input
+      matInput
+      type="text"
+      (keyup)="doFilter($event.target.value)"
+      placeholder="Search"
+    />
+  </mat-form-field>
+  <mat-form-field class="select-form-field">
+    <mat-label>Select coloumn</mat-label>
+    <mat-select
+      [(value)]="selectedColumn"
+      (selectionChange)="changeSortedColumn()"
+    >
+      <mat-option *ngFor="let column of displayedColumns" [value]="column">
+        {{column}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="select-form-field">
+    <mat-label>Select order</mat-label>
+    <mat-select [(value)]="selectedDir" (selectionChange)="changeSortedDir()">
+      <mat-option [value]="'asc'">
+        asc
+      </mat-option>
+      <mat-option [value]="'desc'">
+        desc
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div class="example-container mat-elevation-z8">
+  <table mat-table #table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="{{item}}" *ngFor="let item of displayedColumns">
+      <mat-header-cell *matHeaderCellDef mat-sort-header
+        >{{(item.split('_').join(' '))| titlecase}}</mat-header-cell
+      >
+      <mat-cell *matCellDef="let element">
+        <div class="col-wrapper">
+          <span class="mobile-label"
+            >{{(item.split('_').join(' '))| titlecase}}:</span
+          >
+          <span> {{element[item]}}</span>
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </table>
+  <mat-paginator [pageSizeOptions]="[15, 25,30]" showFirstLastButtons>
+  </mat-paginator>
+</div>
